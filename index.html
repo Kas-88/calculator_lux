@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lux Calculator for T8 LED</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        .container { max-width: 400px; margin: auto; background: #f4f4f4; padding: 20px; border-radius: 10px; }
+        input, button, select { margin: 10px; padding: 10px; width: 90%; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Lux Calculator for T8 LED</h2>
+        
+        <label>Type of Room:</label>
+        <select id="roomType" onchange="setLux()">
+            <option value="100">Warehouse (100 Lux)</option>
+            <option value="200">Corridor (200 Lux)</option>
+            <option value="300">Classroom (300 Lux)</option>
+            <option value="500">Office (500 Lux)</option>
+            <option value="750">Supermarket (750 Lux)</option>
+            <option value="1000">Workshop (1000 Lux)</option>
+        </select>
+        
+        <label>Room Length (m):</label>
+        <input type="number" id="length" placeholder="Enter length" oninput="calculateArea()">
+        
+        <label>Room Width (m):</label>
+        <input type="number" id="width" placeholder="Enter width" oninput="calculateArea()">
+        
+        <label>Ceiling Height (m):</label>
+        <input type="number" id="height" placeholder="Enter height">
+        
+        <label>Total Area (m²):</label>
+        <input type="number" id="area" placeholder="Total area" readonly>
+        
+        <label>Required Lux Level:</label>
+        <input type="number" id="lux" placeholder="Enter required lux" readonly>
+        
+        <label>Lumen Output per LED Tube:</label>
+        <input type="number" id="lumens" value="1950" readonly>
+        
+        <label>T8 LED Length (mm):</label>
+        <input type="number" id="bulbLength" value="1213" readonly>
+        
+        <button onclick="calculateLights()">Calculate</button>
+        
+        <h3 id="result"></h3>
+        <h3 id="totalLux"></h3>
+        <h3 id="calculation"></h3>
+    </div>
+
+    <script>
+        function setLux() {
+            document.getElementById("lux").value = document.getElementById("roomType").value;
+        }
+        
+        function calculateArea() {
+            let length = parseFloat(document.getElementById("length").value);
+            let width = parseFloat(document.getElementById("width").value);
+            
+            if (!isNaN(length) && !isNaN(width) && length > 0 && width > 0) {
+                document.getElementById("area").value = length * width;
+            } else {
+                document.getElementById("area").value = "";
+            }
+        }
+
+        function calculateLights() {
+            let length = parseFloat(document.getElementById("length").value);
+            let width = parseFloat(document.getElementById("width").value);
+            let height = parseFloat(document.getElementById("height").value);
+            let requiredLux = parseFloat(document.getElementById("lux").value);
+            let lumenPerTube = 1950;
+
+            if (isNaN(length) || isNaN(width) || isNaN(height) || isNaN(requiredLux) || length <= 0 || width <= 0 || height <= 0 || requiredLux <= 0) {
+                document.getElementById("result").innerText = "Please enter valid positive numbers!";
+                return;
+            }
+            
+            let area = length * width;
+            document.getElementById("area").value = area;
+            let totalLumensRequired = requiredLux * area;
+            let numberOfLights = Math.ceil(totalLumensRequired / lumenPerTube);
+            let totalLuxProduced = (numberOfLights * lumenPerTube) / area;
+            
+            document.getElementById("result").innerText = "Total T8 LED lights required: " + numberOfLights;
+            document.getElementById("totalLux").innerText = "Total Lux Produced: " + totalLuxProduced.toFixed(2) + " Lux";
+            
+            document.getElementById("calculation").innerText = "Calculation: (Required Lux × Area) / Lumen per Light = Total Lights Required";
+        }
+    </script>
+</body>
+</html>
