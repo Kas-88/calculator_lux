@@ -15,3 +15,4 @@ Click Calculate to determine:
 Total required T8 LED lights.
 Total lux produced.
 View the detailed calculation formula.
+Created by Kamarul
